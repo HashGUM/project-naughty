@@ -1,0 +1,116 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8yxn3qmxvj2a"]
+
+[ext_resource type="Script" path="res://scenes/test_gdextension.gd" id="1_test"]
+
+[node name="TestGDExtension" type="Node2D"]
+script = ExtResource("1_test")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.1, 0.15, 1)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="Title" type="Label" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "GDExtension LlamaInference Test"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="StatusLabel" type="Label" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Initializing..."
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ModelLabel" type="Label" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Select Model:"
+
+[node name="ModelSelector" type="OptionButton" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+selected = 0
+item_count = 3
+popup/item_0/text = "Gemma 3 1B (Q4_0, 957MB)"
+popup/item_0/id = 0
+popup/item_1/text = "Qwen2.5 1.5B (Q4_0, 892MB)"
+popup/item_1/id = 1
+popup/item_2/text = "Qwen3 0.6B (Q4_K_M, 462MB)"
+popup/item_2/id = 2
+
+[node name="LoadModelButton" type="Button" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Reload Model (Manual)"
+
+[node name="HSeparator3" type="HSeparator" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="InputLabel" type="Label" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Enter test prompt:"
+
+[node name="InputField" type="TextEdit" parent="UI/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+placeholder_text = "Example: Go catch butterflies"
+wrap_mode = 1
+
+[node name="SendButton" type="Button" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "Send Inference Request"
+
+[node name="HSeparator4" type="HSeparator" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="OutputLabel" type="Label" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Inference Output:"
+
+[node name="OutputDisplay" type="TextEdit" parent="UI/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 12
+placeholder_text = "Waiting for inference result..."
+editable = false
+wrap_mode = 1
+
+[node name="InfoLabel" type="Label" parent="UI/MarginContainer/VBoxContainer"]
+modulate = Color(0.7, 0.7, 0.7, 1)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Status: GPU/CPU auto-detection enabled. RTX 5070 Ti detected."
+autowrap_mode = 3
+

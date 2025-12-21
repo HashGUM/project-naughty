@@ -1,0 +1,22 @@
+# 猫咪回复的JSON Schema - 3D场景专用
+# 要求输出固定格式：{"location":"xxx", "action":"xxx", "meow":"xxx"}
+
+root ::= cat-response
+
+cat-response ::= "{" ws
+  "\"location\"" ws ":" ws location-value ws "," ws
+  "\"action\"" ws ":" ws action-value ws "," ws
+  "\"meow\"" ws ":" ws string ws
+"}" ws
+
+# 位置值：限定可选值
+location-value ::= "\"house\"" | "\"garden\"" | "\"center\"" | "\"\""
+
+# 动作值：限定可选值
+action-value ::= "\"move\"" | "\"play\"" | "\"sleep\"" | "\"idle\""
+
+# 字符串：双引号包裹的任意字符（允许转义）
+string ::= "\"" ([^"\\] | "\\" .)* "\""
+
+# 可选的空白字符（空格、制表符、换行）
+ws ::= [ \t\n\r]*

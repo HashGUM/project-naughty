@@ -1,0 +1,60 @@
+{
+  "distribution_config": {
+    "version": "1.0.0",
+    "mode": "auto",
+    "fallback_to_cpu": true,
+    "gpu_detection": "automatic"
+  },
+  "required_files": {
+    "core": [
+      "bin/libllama_godot.windows.template_release.x86_64.dll",
+      "bin/llama.dll",
+      "bin/ggml.dll",
+      "bin/ggml-base.dll",
+      "bin/ggml-cpu.dll"
+    ],
+    "models": [
+      "models/qwen3-0.6b-q4_k_m.gguf"
+    ],
+    "config": [
+      "llama_cpp.gdextension"
+    ]
+  },
+  "optional_files": {
+    "gpu_acceleration": [
+      "bin/ggml-cuda.dll",
+      "bin/cudart64_12.dll"
+    ],
+    "debug": [
+      "bin/libllama_godot.windows.template_debug.x86_64.dll"
+    ]
+  },
+  "file_sizes": {
+    "llama.dll": "4.5 MB",
+    "ggml-cpu.dll": "0.7 MB",
+    "ggml-base.dll": "0.5 MB",
+    "ggml.dll": "0.07 MB",
+    "libllama_godot.dll": "0.4 MB",
+    "qwen3-0.6b-q4_k_m.gguf": "462 MB"
+  },
+  "total_size": {
+    "minimal": "468 MB",
+    "with_gpu": "620 MB"
+  },
+  "system_requirements": {
+    "minimum": {
+      "os": "Windows 10+",
+      "cpu": "x86_64, 2 cores",
+      "ram": "2 GB",
+      "storage": "500 MB"
+    },
+    "recommended": {
+      "os": "Windows 10/11",
+      "cpu": "x86_64, 4+ cores",
+      "ram": "4 GB",
+      "storage": "1 GB",
+      "gpu": "NVIDIA GPU with CUDA support (optional)"
+    }
+  }
+}
+

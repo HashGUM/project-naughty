@@ -1,0 +1,10 @@
+# 忽略C++编译产物
+*.obj
+*.o
+*.a
+*.lib
+*.exp
+*.pdb
+*.ilk
+.sconsign.dblite
+
