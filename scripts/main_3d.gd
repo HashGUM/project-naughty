@@ -143,4 +143,3 @@ func _on_ai_completed(response: Dictionary):
 func _on_ai_failed(error: String):
 	status_label.text = "状态: AI失败"
 	response_label.text = "❌ " + error
-
