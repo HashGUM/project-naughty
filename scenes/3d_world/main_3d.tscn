@@ -1,10 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://cw8y3x5j2v4m5"]
+[gd_scene load_steps=15 format=3 uid="uid://cw8y3x5j2v4m5"]
 
 [ext_resource type="Script" uid="uid://dc2udenx1u1i" path="res://scripts/main_3d.gd" id="1"]
-[ext_resource type="Script" uid="uid://wclkk2o6pqi1" path="res://scripts/cat_3d.gd" id="2"]
 [ext_resource type="Script" uid="uid://b5eb3picqvrst" path="res://scripts/interaction_area.gd" id="3"]
 [ext_resource type="Script" uid="uid://cyvwjs7s2baw8" path="res://scripts/camera_3d.gd" id="4"]
 [ext_resource type="Script" uid="uid://noeapswshs8j" path="res://scripts/ai_controller_3d.gd" id="5"]
+[ext_resource type="PackedScene" uid="uid://8yrmjhr6fdfp" path="res://scenes/characters/cat.tscn" id="6"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_1"]
 vertices = PackedVector3Array(-10, 0.1, -10, -10, 0.1, 10, 10, 0.1, 10, 10, 0.1, -10)
@@ -34,16 +34,6 @@ size = Vector3(4, 0.5, 4)
 [sub_resource type="StandardMaterial3D" id="Material_garden"]
 albedo_color = Color(0.2, 0.8, 0.3, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_cat"]
-size = Vector3(0.8, 0.6, 0.8)
-
-[sub_resource type="StandardMaterial3D" id="Material_cat"]
-albedo_color = Color(1, 0.8, 0.6, 1)
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape_cat"]
-radius = 0.3
-height = 0.6
-
 [node name="Main3D" type="Node3D"]
 script = ExtResource("1")
 use_ai = true
@@ -56,7 +46,7 @@ shadow_enabled = true
 shadow_bias = 0.05
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 12, 15)
+transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 6, 8)
 fov = 60.0
 script = ExtResource("4")
 
@@ -102,22 +92,8 @@ interaction_type = "garden"
 [node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Garden/InteractionArea"]
 shape = SubResource("SphereShape_interaction")
 
-[node name="Cat" type="CharacterBody3D" parent="."]
+[node name="Cat" parent="." instance=ExtResource("6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-script = ExtResource("2")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cat"]
-mesh = SubResource("BoxMesh_cat")
-surface_material_override/0 = SubResource("Material_cat")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cat"]
-shape = SubResource("CapsuleShape_cat")
-
-[node name="NavigationAgent3D" type="NavigationAgent3D" parent="Cat"]
-path_desired_distance = 0.5
-target_desired_distance = 0.5
-path_max_distance = 3.0
-debug_enabled = true
 
 [node name="AIController" type="Node" parent="."]
 script = ExtResource("5")

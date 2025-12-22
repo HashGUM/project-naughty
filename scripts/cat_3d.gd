@@ -1,27 +1,40 @@
 extends CharacterBody3D
 class_name Cat3D
-## 3D猫咪控制器 - 处理移动和导航
+## 3D猫咪控制器 - 处理移动、导航和动画
 
 @export var move_speed: float = 3.0
 @export var rotation_speed: float = 10.0
 
 @onready var navigation_agent: NavigationAgent3D = $NavigationAgent3D
-@onready var mesh_instance: MeshInstance3D = $MeshInstance3D
+@onready var animation_tree: AnimationTree = $CatModel/AnimationTree
+@onready var cat_model = $CatModel
 
 signal movement_completed
 signal movement_started
 
 var is_moving: bool = false
 var target_position: Vector3
+var playback: AnimationNodeStateMachinePlayback
+var current_animation_state: String = ""  # 跟踪当前动画状态，避免重复切换
+var is_playing_action: bool = false  # 是否正在播放动作动画（不应被打断）
 
 
 func _ready():
 	# 等待第一帧后再配置导航代理
 	call_deferred("_setup_navigation")
+	
+	# 初始化动画系统
+	if animation_tree:
+		playback = animation_tree.get("parameters/playback")
+		animation_tree.active = true
+		# 启动状态机，从Idle状态开始
+		playback.start("Idle")
+		current_animation_state = "Idle"
+		print("✓ 猫咪动画系统初始化完成")
 
 
 func _setup_navigation():
-	"""配置导航代理"""
+	# 配置导航代理
 	# 等待导航地图同步完成
 	await get_tree().physics_frame
 	
@@ -36,11 +49,19 @@ func _setup_navigation():
 
 func _physics_process(delta):
 	if not is_moving:
+		# 空闲状态，只在状态改变时切换动画（但不打断动作动画）
+		if playback and current_animation_state != "Idle" and not is_playing_action:
+			playback.travel("Idle")
+			current_animation_state = "Idle"
 		return
 	
 	if navigation_agent.is_navigation_finished():
 		is_moving = false
 		velocity = Vector3.ZERO
+		# 切换到Idle动画
+		if playback and current_animation_state != "Idle":
+			playback.travel("Idle")
+			current_animation_state = "Idle"
 		print("✓ 猫咪到达目标位置: ", global_position)
 		emit_signal("movement_completed")
 		return
@@ -51,8 +72,14 @@ func _physics_process(delta):
 	
 	# 调试信息（每60帧打印一次）
 	if Engine.get_physics_frames() % 60 == 0:
-		print("  移动中... 当前: ", global_position, " 目标: ", target_position, " 距离: ", global_position.distance_to(target_position))
-		print("    下一个路径点: ", next_path_position, " 方向: ", direction)
+		var distance = global_position.distance_to(target_position)
+		print("  移动中... 当前: ", global_position, " 目标: ", target_position)
+		print("    距离: ", distance, " 下一个路径点: ", next_path_position)
+	
+	# 播放Walk动画，只在状态改变时切换
+	if playback and current_animation_state != "Walk":
+		playback.travel("Walk")
+		current_animation_state = "Walk"
 	
 	# 直接设置velocity并移动（不使用avoidance）
 	if navigation_agent.avoidance_enabled:
@@ -71,13 +98,13 @@ func _physics_process(delta):
 
 
 func _on_velocity_computed(safe_velocity: Vector3):
-	"""导航代理计算出安全速度后调用"""
+	# 导航代理计算出安全速度后调用
 	velocity = safe_velocity
 	move_and_slide()
 
 
 func move_to(target: Vector3):
-	"""移动到目标位置"""
+	# 移动到目标位置
 	if is_moving:
 		print("⚠ 猫咪正在移动中，取消当前移动")
 	
@@ -96,8 +123,26 @@ func move_to(target: Vector3):
 
 
 func stop_movement():
-	"""停止移动"""
+	# 停止移动
 	is_moving = false
 	velocity = Vector3.ZERO
 	navigation_agent.set_velocity(Vector3.ZERO)
 
+
+func play_action():
+	# 播放操作动画（抓蝴蝶等）
+	if playback:
+		is_playing_action = true
+		playback.travel("Operate")
+		current_animation_state = "Operate"
+		print("🐱 猫咪执行操作动画")
+		
+		# 等待动画播放完成（Operate动画大约2-3秒）
+		await get_tree().create_timer(3.0).timeout
+		
+		# 动画结束，恢复到Idle
+		is_playing_action = false
+		if playback and not is_moving:
+			playback.travel("Idle")
+			current_animation_state = "Idle"
+			print("✓ 操作动画播放完成")

@@ -43,25 +43,30 @@ const SYSTEM_PROMPT = """你是一只可爱的猫咪AI助手。用户会给你�
 4. 完成JSON后立即结束
 """
 
-# AI配置 - JSON Grammar (GBNF格式 - 严格模式)
-const JSON_GRAMMAR = """# 猫咪回复的JSON Schema - 严格格式，防止额外生成
+# AI配置 - JSON Grammar (GBNF格式)
+# 注意：GDScript三引号字符串中，反斜杠不需要转义（除非要输出\\\\）
+const JSON_GRAMMAR = """# 猫咪回复的JSON Schema - 3D场景专用
+# 要求输出固定格式：{"location":"xxx", "action":"xxx", "meow":"xxx"}
+
 root ::= cat-response
 
-cat-response ::= "{"
-  "\\"location\\"" ":" location-value ","
-  "\\"action\\"" ":" action-value ","
-  "\\"meow\\"" ":" meow-value
-"}"
+cat-response ::= "{" ws
+  "\"location\"" ws ":" ws location-value ws "," ws
+  "\"action\"" ws ":" ws action-value ws "," ws
+  "\"meow\"" ws ":" ws string ws
+"}" ws
 
 # 位置值：限定可选值
-location-value ::= "\\"house\\"" | "\\"garden\\"" | "\\"center\\""
+location-value ::= "\"house\"" | "\"garden\"" | "\"center\"" | "\"\""
 
-# 动作值：限定可选值  
-action-value ::= "\\"move\\"" | "\\"play\\"" | "\\"sleep\\"" | "\\"idle\\""
+# 动作值：限定可选值
+action-value ::= "\"move\"" | "\"play\"" | "\"sleep\"" | "\"idle\""
 
-# 喵叫值：允许包含喵的任意短文本（限制长度）
-meow-value ::= "\\"" meow-char+ "\\""
-meow-char ::= [^"\\\\] | "\\\\" ["\\\\/bfnrt]
+# 字符串：双引号包裹的任意字符（允许转义）
+string ::= "\"" ([^"\\] | "\\" .)* "\""
+
+# 可选的空白字符（空格、制表符、换行）
+ws ::= [ \t\n\r]*
 """
 
 
@@ -244,10 +249,8 @@ func _trigger_play_animation() -> void:
 	if cat.is_moving:
 		await cat.movement_completed
 	
-	# TODO: 播放动画
 	print("  💫 播放玩耍动画")
-	# 示例：让猫咪原地转圈
-	# cat.play_animation("play")
+	cat.play_action()
 
 
 func _trigger_sleep_animation() -> void:
