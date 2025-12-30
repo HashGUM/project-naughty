@@ -10,6 +10,7 @@ signal command_completed(response: Dictionary)
 signal command_failed(error: String)
 
 var ai_is_processing: bool = false  # 重命名避免shadowing Node.is_processing()
+var inference_thread: Thread = null  # 推理线程
 var locations_map = {
 	"house": Vector3(6, 0.5, 6),
 	"garden": Vector3(-6, 0.5, -6),
@@ -86,11 +87,8 @@ func _ready():
 		llama = ClassDB.instantiate("LlamaInference")
 		add_child(llama)
 		
-		# 连接信号
-		if llama.has_signal("inference_completed"):
-			llama.inference_completed.connect(_on_inference_completed)
-		if llama.has_signal("inference_failed"):
-			llama.inference_failed.connect(_on_inference_failed)
+		# 🧵 注意：不连接信号，因为信号从子线程发出可能不可靠
+		# 我们改用线程中直接获取结果，然后call_deferred回主线程
 		
 		# 设置GPU layers
 		llama.set("gpu_layers", -1)
@@ -147,12 +145,27 @@ func process_command(command: String) -> void:
 	
 	print("🔍 发送指令: ", command)
 
-	# 构建提示词
-	llama.call("infer", command)
+	# 🧵 在独立线程中执行推理，避免阻塞主线程
+	if inference_thread and inference_thread.is_alive():
+		inference_thread.wait_to_finish()
+	
+	inference_thread = Thread.new()
+	inference_thread.start(_infer_thread.bind(command))
 
 
-func _on_inference_completed(result: String) -> void:
-	## AI推理完成
+func _infer_thread(command: String) -> void:
+	## 在独立线程中执行推理
+	print("🧵 线程启动: 开始AI推理...")
+	
+	# 同步调用 infer，等待结果
+	var result = llama.call("infer", command)
+	
+	# 推理完成，回到主线程处理结果
+	call_deferred("_on_inference_completed_main_thread", result)
+
+
+func _on_inference_completed_main_thread(result: String) -> void:
+	## 在主线程中处理AI推理结果
 	print("🤖 原始AI响应: ", result)
 	
 	# 🎯 使用正则提取JSON（防御性编程：处理LLM抽风）
@@ -265,12 +278,6 @@ func _trigger_sleep_animation() -> void:
 	# cat.play_animation("sleep")
 
 
-func _on_inference_failed(error: String) -> void:
-	## AI推理失败
-	push_error("AI推理失败: ", error)
-	_use_fallback()
-
-
 func _use_fallback() -> void:
 	## 使用后备行为
 	var response = {
@@ -280,3 +287,10 @@ func _use_fallback() -> void:
 	}
 	emit_signal("command_completed", response)
 	ai_is_processing = false
+
+
+func _exit_tree() -> void:
+	## 节点销毁时清理线程
+	if inference_thread and inference_thread.is_alive():
+		print("🧹 等待推理线程结束...")
+		inference_thread.wait_to_finish()
