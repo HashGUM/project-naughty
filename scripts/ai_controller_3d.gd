@@ -228,10 +228,14 @@ func _validate_json_response(json: Dictionary) -> bool:
 func _execute_action(location_key: String, action: String) -> void:
 	## 根据location和action执行对应的行为
 	
+	# 停止闲逛，准备执行命令
+	cat.stop_wandering()
+	cat.is_executing_command = true
+	
 	# 1. 处理移动
 	if location_key in locations_map:
 		var target_pos = locations_map[location_key]
-		cat.move_to(target_pos)
+		cat.move_to(target_pos, true)  # is_command=true，使用Run动画
 		print("🐱 猫咪移动到: ", location_key)
 	elif location_key != "":
 		push_warning("未知位置: " + location_key)
@@ -241,6 +245,8 @@ func _execute_action(location_key: String, action: String) -> void:
 		"move":
 			print("🚶 动作: 移动")
 			# 移动已在上面处理
+			# 移动完成后恢复闲逛
+			_restore_wandering_after_move()
 		"play":
 			print("🎮 动作: 玩耍")
 			# TODO: 播放玩耍动画
@@ -251,7 +257,8 @@ func _execute_action(location_key: String, action: String) -> void:
 			_trigger_sleep_animation()
 		"idle":
 			print("🧍 动作: 待机")
-			# 不做特殊处理
+			# 待机后也恢复闲逛
+			_restore_wandering_after_move()
 		_:
 			push_warning("未知动作: " + action)
 
@@ -264,6 +271,12 @@ func _trigger_play_animation() -> void:
 	
 	print("  💫 播放玩耍动画")
 	cat.play_action()
+	
+	# 等待动画播放完成后恢复闲逛
+	await get_tree().create_timer(3.5).timeout  # play_action内部等3秒，加0.5秒缓冲
+	cat.is_executing_command = false
+	cat.start_wandering()
+	print("✓ 命令执行完成，恢复闲逛")
 
 
 func _trigger_sleep_animation() -> void:
@@ -276,6 +289,23 @@ func _trigger_sleep_animation() -> void:
 	print("  💤 播放睡觉动画")
 	# 示例：让猫咪趴下
 	# cat.play_animation("sleep")
+	
+	# 睡觉动画完成后恢复闲逛（假设睡觉动画2秒）
+	await get_tree().create_timer(2.0).timeout
+	cat.is_executing_command = false
+	cat.start_wandering()
+	print("✓ 命令执行完成，恢复闲逛")
+
+
+func _restore_wandering_after_move() -> void:
+	## 仅移动命令后恢复闲逛（无额外动画）
+	# 等待移动完成
+	if cat.is_moving:
+		await cat.movement_completed
+	
+	cat.is_executing_command = false
+	cat.start_wandering()
+	print("✓ 移动完成，恢复闲逛")
 
 
 func _use_fallback() -> void:
