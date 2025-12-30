@@ -2,6 +2,8 @@
 
 > 将本地LLM推理引擎无缝集成到Godot游戏引擎的完整示例项目
 
+![walk](./docs/imgs/walk.png)
+
 ## 项目特性
 
 - **真实AI推理**：使用llama.cpp在游戏内实时运行SLM
