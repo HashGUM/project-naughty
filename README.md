@@ -1,33 +1,34 @@
-# 🐱 Godot AI猫 - 基于llama.cpp的本地AI游戏
+# Godot AI猫 - 基于llama.cpp的本地AI游戏
 
-> 一个将本地LLM推理引擎无缝集成到Godot游戏引擎的完整示例项目
+> 将本地LLM推理引擎无缝集成到Godot游戏引擎的完整示例项目
 
-## ✨ 项目亮点
+## 项目特性
 
-- 🚀 **真实AI推理**：使用llama.cpp在游戏内实时运行SLM
-- 🎮 **零外部依赖**：无需Python、API或网络，纯Godot+GDExtension
-- ⚡ **GPU加速**：支持CUDA加速，自动降级到CPU
-- 🌏 **中文优化**：完整的UTF-8支持，针对中文场景优化
-- 🎯 **游戏优化**：异步推理、设备检测、配置灵活
+- **真实AI推理**：使用llama.cpp在游戏内实时运行SLM
+- **零外部依赖**：无需Python、API或网络连接，纯Godot + GDExtension实现
+- **GPU加速支持**：支持CUDA硬件加速，可自动降级至CPU运行
+- **中文优化**：完整的UTF-8支持，针对中文场景优化
+- **游戏引擎优化**：异步推理、设备检测、配置灵活
 
-## 🎊 当前状态：3D白盒原型完成！
+## 项目状态
 
-**llama.cpp GDExtension集成已完成并测试通过！**  
-**3D白盒场景原型已完成并可运行！**  
-**AI约束和输出优化已完成！**
+**llama.cpp GDExtension集成已完成并测试通过**  
+**3D白盒场景原型已完成并可运行**  
+**AI约束和输出优化已完成**
 
-✅ llama.cpp推理引擎集成完成
-✅ GPU/CPU双模式运行
-✅ 中文输入输出无乱码
-✅ 3D导航寻路系统
-✅ 交互事件系统
-✅ AI/规则双模式切换
-✅ 严格JSON Grammar约束（防止LLM多余输出）
-✅ 双重保护机制（C++清理 + GDScript正则）
+已完成功能：
+- llama.cpp推理引擎集成
+- GPU/CPU双模式运行
+- 中文输入输出支持
+- 3D导航寻路系统
+- 交互事件系统
+- AI/规则双模式切换
+- 严格JSON Grammar约束（防止LLM多余输出）
+- 双重保护机制（C++清理 + GDScript正则）
 
 查看详细报告：[FEATURE_COMPLETE.md](docs/FEATURE_COMPLETED.md)
 
-## 🚀 5分钟快速开始
+## 快速开始
 
 ### 方式1：测试AI推理引擎
 
@@ -69,15 +70,13 @@
    - 重新运行（首次加载需5-10秒）
    - 可以使用自然语言命令
 
-**就是这么简单！** 🎉
-
 详细使用说明见：[scenes/3d_world/README.md](scenes/3d_world/README.md)
 
-## 📦 项目结构
+## 项目结构
 
 ```
 project-naughty/
-├── addons/llama_cpp/              # 🔌 GDExtension核心
+├── addons/llama_cpp/              # GDExtension核心
 │   ├── src/                       # C++源代码
 │   │   ├── llama_inference.h      # LlamaInference类定义
 │   │   ├── llama_inference.cpp    # 推理引擎实现
@@ -91,36 +90,36 @@ project-naughty/
 │   ├── rebuild.ps1                # 快速重建脚本
 │   └── SETUP.md                   # 详细编译指南
 │
-├── scenes/                        # 🎬 场景文件
+├── scenes/                        # 场景文件
 │   ├── test_gdextension.tscn      # AI推理测试场景
 │   ├── test_gdextension.gd        # 测试脚本
-│   └── 3d_world/                  # 🎮 3D原型场景
+│   └── 3d_world/                  # 3D原型场景
 │       ├── main_3d.tscn           # 主3D场景
 │       └── README.md              # 3D场景使用说明
 │
-├── scripts/                       # 📜 GDScript脚本
+├── scripts/                       # GDScript脚本
 │   ├── ai_controller_3d.gd        # AI控制器（含配置）
 │   ├── main_3d.gd                 # 主场景控制器
 │   ├── cat_3d.gd                  # 猫咪移动控制
 │   ├── camera_3d.gd               # 相机控制
 │   └── interaction_area.gd        # 交互区域
 │
-├── models/                        # 🧠 AI模型
+├── models/                        # AI模型
 │   └── qwen3-0.6b-q4_k_m.gguf     # 示例模型
 │
-├── docs/                          # 📚 文档
+├── docs/                          # 文档
 │   ├── FEATURE_COMPLETED.md       # 功能完成报告
 │   ├── NEXT_PHASE_PLAN.md         # 下一阶段计划
 │   └── DOCS_INDEX.md              # 文档索引
 │
-├── README.md                      # 📖 本文档
-├── SLM_MODEL_RECOMMENDATIONS.md   # 📊 模型推荐
-├── TEST_GUIDE.md                  # 🧪 测试指南
-├── DISTRIBUTION_GUIDE.md          # 📦 分发指南
-└── INTEGRATION_COMPLETE.md        # 🔧 技术集成细节
+├── README.md                      # 本文档
+├── SLM_MODEL_RECOMMENDATIONS.md   # 模型推荐
+├── TEST_GUIDE.md                  # 测试指南
+├── DISTRIBUTION_GUIDE.md          # 分发指南
+└── INTEGRATION_COMPLETE.md        # 技术集成细节
 ```
 
-## 💻 核心API
+## 核心API
 
 ### GDScript使用示例
 
@@ -162,9 +161,9 @@ func _on_inference_failed(error: String):
     print("推理失败: ", error)
 ```
 
-## 🎯 AI配置：简洁直接的提示词配置
+## AI配置方式
 
-### 配置方式
+### 提示词配置
 
 直接在`./scripts/ai_controller_3d.gd`处配置：
 
@@ -188,13 +187,13 @@ llama.call("load_model", model_path)
 
 ### Grammar约束优化
 
-> 目前还是有不小概率出现思考输出，不过也不坏不是么，看着还行
+> 目前仍存在小概率出现思考输出的情况，但整体输出质量可接受
 
 **严格模式GBNF**（防止LLM生成额外内容）：
-- ❌ 移除所有可选空白符 (`ws`)
-- ✅ 严格的字段枚举值
-- ✅ JSON结构完成后立即终止
-- ✅ 配合正则fallback确保解析成功
+- 移除所有可选空白符 (`ws`)
+- 严格的字段枚举值
+- JSON结构完成后立即终止
+- 配合正则fallback确保解析成功
 
 
 **双重保护机制**：
@@ -235,7 +234,7 @@ signal inference_completed(result: String)  # 推理完成
 signal inference_failed(error: String)      # 推理失败
 ```
 
-## 🏗️ 重新编译指南
+## 重新编译指南
 
 如果你修改了C++源代码，需要重新编译GDExtension：
 
@@ -258,11 +257,11 @@ python -m SCons platform=windows target=template_debug
 
 首次设置详见：[addons/llama_cpp/SETUP.md](addons/llama_cpp/SETUP.md)
 
-## 🎮 技术架构
+## 技术架构
 
 ```
 ┌─────────────────────────────────┐
-│   Godot GDScript 游戏逻辑      │  ← 你的游戏代码
+│   Godot GDScript 游戏逻辑      │  ← 游戏代码层
 │   (AI猫咪行为、UI等)           │
 └─────────────────────────────────┘
            ↕ GDExtension API
@@ -282,12 +281,12 @@ python -m SCons platform=windows target=template_debug
 ```
 
 **关键特性：**
-- ⚡ GPU优先，CPU自动降级
-- 🔄 异步推理，不阻塞游戏主循环
-- 🌐 UTF-8中文完美支持
-- 📦 单一DLL，无额外依赖
+- GPU优先，CPU自动降级
+- 异步推理，不阻塞游戏主循环
+- UTF-8中文完美支持
+- 单一DLL，无额外依赖
 
-## 📚 文档导航
+## 文档导航
 
 ### 核心文档
 | 文档 | 内容 |
@@ -297,15 +296,15 @@ python -m SCons platform=windows target=template_debug
 | [scenes/3d_world/README.md](scenes/3d_world/README.md) | 3D场景使用说明 |
 | [addons/llama_cpp/SETUP.md](addons/llama_cpp/SETUP.md) | 首次编译环境设置 |
 
-## 🧪 测试结果
+## 测试结果
 
-✅ **测试环境**
+**测试环境**
 - OS: Windows 11
 - GPU: NVIDIA GeForce RTX 5070 Ti
 - Godot: 4.5.1 stable
 - 编译器: MinGW-w64 (GCC)
 
-✅ **测试通过**
+**测试通过**
 - GPU推理正常
 - CPU降级正常
 - 中文输入输出无乱码
@@ -321,7 +320,7 @@ LlamaInference: 加载模型 - E:/Godot/project-naughty/models/qwen3-0.6b-q4_k_m
 推理完成，生成长度: 954
 ```
 
-## 📦 游戏分发
+## 游戏分发
 
 导出游戏时需要包含以下文件：
 
@@ -346,7 +345,7 @@ cudart64_*.dll (CUDA运行时)
 - 性能版：包含GPU DLL（需要NVIDIA显卡）
 - 智能版：同时包含，运行时自动选择
 
-## 🎓 技术亮点与经验
+## 技术亮点与经验
 
 ### 解决的关键问题
 
@@ -354,7 +353,7 @@ cudart64_*.dll (CUDA运行时)
    - 问题：C++ `std::string` → Godot `String` 中文乱码
    - 解决：使用 `String::utf8()` 显式转换
    ```cpp
-   // ✅ 正确方式
+   // 正确方式
    emit_signal("inference_completed", String::utf8(result.c_str()));
    ```
 
@@ -377,30 +376,30 @@ cudart64_*.dll (CUDA运行时)
 - **GPU加速**：RTX系列GPU可显著提升推理速度
 - **批处理**：llama.cpp内部优化，无需手动实现
 
-## 🔮 下一步开发
+## 下一步开发计划
 
 推理引擎和3D原型已就绪，现在可以继续完善AI猫咪功能：
 
-### 🎯 当前进度
+### 当前进度
 
 ```
-✅ llama.cpp推理引擎完成
-✅ 3D白盒原型完成
-   ├── ✅ 导航寻路系统
-   ├── ✅ 交互事件系统
-   ├── ✅ 相机控制
-   └── ✅ AI/规则双模式
+[已完成] llama.cpp推理引擎
+[已完成] 3D白盒原型
+   ├── [已完成] 导航寻路系统
+   ├── [已完成] 交互事件系统
+   ├── [已完成] 相机控制
+   └── [已完成] AI/规则双模式
 
-🎯 下一步：完善猫咪行为
+[进行中] 下一步：完善猫咪行为
    ├── 添加更多动作类型
    ├── 实现状态系统
    ├── 优化AI提示词
    └── 数据收集与微调
 ```
 
-### 📋 详细开发计划
+### 详细开发计划
 
-查看：**[docs/NEXT_PHASE_PLAN.md](docs/NEXT_PHASE_PLAN.md)** ⭐
+查看：**[docs/NEXT_PHASE_PLAN.md](docs/NEXT_PHASE_PLAN.md)**
 
 **核心模块：**
 
@@ -422,9 +421,9 @@ cudart64_*.dll (CUDA运行时)
 4. **（可选）LoRA微调**
    - 训练数据生成
    - 模型微调
-   - "猫化"个性注入
+   - 个性化注入
 
-### 🚀 立即可做的事情
+### 立即可做的工作
 
 1. **测试当前系统**
    ```bash
@@ -450,7 +449,7 @@ cudart64_*.dll (CUDA运行时)
        # 改进提示词，让AI理解更准确
    ```
 
-## 🆘 常见问题
+## 常见问题
 
 ### Q: 编译时找不到编译器
 **A**: 需要安装MinGW-w64或Visual Studio，详见 `addons/llama_cpp/SETUP.md`
@@ -480,7 +479,7 @@ cudart64_*.dll (CUDA运行时)
 3. 降低 `max_tokens` 参数
 4. 增加 `threads` 数量（CPU模式）
 
-## 🤝 贡献与致谢
+## 贡献与致谢
 
 **依赖项致谢：**
 - [llama.cpp](https://github.com/ggerganov/llama.cpp) - 高性能LLM推理库
@@ -492,19 +491,15 @@ cudart64_*.dll (CUDA运行时)
 - godot-cpp: MIT License
 - Godot Engine: MIT License
 
-## 📞 联系方式
+## 联系方式
 
 - 项目Issues: [GitHub Issues](your-repo/issues)
 - 讨论区: [GitHub Discussions](your-repo/discussions)
 
 ---
 
-<div align="center">
+### 项目状态：llama.cpp集成已完成
 
-### 🎊 恭喜！llama.cpp集成完成！
-
-**现在可以开始构建你的AI驱动游戏了！** 🐱✨
+现在可以开始构建AI驱动的游戏项目。
 
 [开始开发](FEATURE_COMPLETE.md) • [查看文档](addons/llama_cpp/SETUP.md) • [测试推理](TEST_GUIDE.md)
-
-</div>
